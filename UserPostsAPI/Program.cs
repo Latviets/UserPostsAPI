@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using UserPostsAPI.DBContext;
 
 namespace UserPostsAPI
 {
@@ -10,24 +12,31 @@ namespace UserPostsAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Add DbContext service
+            builder.Services.AddDbContext<AppDbContext>(
+                options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            // seed database
+            using (var scope = app.Services.CreateScope())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                var services = scope.ServiceProvider;
+                SeedData.Initialize(services);
             }
 
+            // Configure the middleware pipeline
             app.UseHttpsRedirection();
-
+            app.UseCors(policy =>
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader());
             app.UseAuthorization();
-
-
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.MapControllers();
 
             app.Run();
