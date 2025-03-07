@@ -2,9 +2,9 @@
 
 namespace UserPostsAPI.Models
 {
-    public class UserModelValidator : AbstractValidator<UserModel>
+    public class UserValidator : AbstractValidator<User>
     {
-        public UserModelValidator()
+        public UserValidator()
         {
             RuleFor(user => user.Name)
                 .NotEmpty()

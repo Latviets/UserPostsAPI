@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using UserPostsAPI.Models;
 
-public class UserPostModelValidator : AbstractValidator<UserPostModel>
+public class UserPostValidator : AbstractValidator<UserPost>
 {
-    public UserPostModelValidator()
+    public UserPostValidator()
     {
         RuleFor(post => post.UserId)
             .GreaterThan(0)

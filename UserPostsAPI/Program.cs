@@ -42,3 +42,4 @@ namespace UserPostsAPI
         }
     }
 }
+public partial class Program { }

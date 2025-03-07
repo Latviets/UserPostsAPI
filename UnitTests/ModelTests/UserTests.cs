@@ -1,13 +1,14 @@
-﻿using FluentValidation;
+﻿using FluentAssertions;
+using FluentValidation;
 using UserPostsAPI.Models;
 
-public class UserModelTests : TestBase
+public class UserTests : TestBase
 {
-    private readonly UserModel _baseModel;
+    private readonly User _baseModel;
 
-    public UserModelTests()
+    public UserTests()
     {
-        _baseModel = new UserModel
+        _baseModel = new User
         {
             Id = 1,
             Name = "Test User",
@@ -22,12 +23,12 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Name = string.Empty;
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Name");
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Name");
     }
 
     [Fact]
@@ -35,54 +36,53 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Name = "John123";
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Name" && e.ErrorMessage.Contains("must consist of letters only"));
-
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Name" 
+            && e.ErrorMessage.Contains("must consist of letters only"));
     }
 
     [Fact]
     public void Should_Have_Error_When_Name_Contains_Special_Characters()
     {
         var model = _baseModel.Clone();
-        model.Name = "John@Doe"; // Invalid name with special characters
-        var validator = GetService<IValidator<UserModel>>();
+        model.Name = "John@Doe";
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Name" && e.ErrorMessage.Contains("must consist of letters only"));
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Name" 
+            && e.ErrorMessage.Contains("must consist of letters only"));
     }
-
-
 
     [Fact]
     public void Should_Have_Error_When_Name_Is_Too_Short()
     {
         var model = _baseModel.Clone();
         model.Name = "Jo";
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Name" && e.ErrorMessage.Contains("at least 3 characters"));
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Name" 
+            && e.ErrorMessage.Contains("at least 3 characters"));
     }
-
 
     [Fact]
     public void Should_Not_Have_Error_When_Name_Is_Valid()
     {
         var model = _baseModel.Clone();
         model.Name = "Edvins Valid";
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.True(result.IsValid);;
+        result.IsValid.Should().BeTrue();
     }
 
     [Fact]
@@ -90,12 +90,12 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Email = "invalid-email";
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Email");
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Email");
     }
 
     [Fact]
@@ -103,12 +103,12 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Email = string.Empty;
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Email");
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Email");
     }
 
     [Fact]
@@ -116,11 +116,11 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Email = "valid@gmail.com";
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.True(result.IsValid);
+        result.IsValid.Should().BeTrue();
     }
 
     [Fact]
@@ -128,12 +128,13 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Password = string.Empty;
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Password" && e.ErrorMessage.Contains("Password is required"));
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Password" 
+            && e.ErrorMessage.Contains("Password is required"));
     }
 
     [Fact]
@@ -141,12 +142,13 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Password = "123";
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Password" && e.ErrorMessage.Contains("at least 6 characters"));
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Password" 
+            && e.ErrorMessage.Contains("at least 6 characters"));
     }
 
     [Fact]
@@ -154,11 +156,11 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Password = "secure123";
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.True(result.IsValid);
+        result.IsValid.Should().BeTrue();
     }
 
     [Fact]
@@ -166,12 +168,13 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Address = string.Empty;
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Address" && e.ErrorMessage.Contains("Address is required"));
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Address"
+            && e.ErrorMessage.Contains("Address is required"));
     }
 
     [Fact]
@@ -179,23 +182,21 @@ public class UserModelTests : TestBase
     {
         var model = _baseModel.Clone();
         model.Address = "123 Elm Street";
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.True(result.IsValid);
+        result.IsValid.Should().BeTrue();
     }
-
 
     [Fact]
     public void Should_Pass_When_All_Fields_Are_Valid()
     {
-
         var model = _baseModel.Clone();
-        var validator = GetService<IValidator<UserModel>>();
+        var validator = GetService<IValidator<User>>();
 
         var result = validator.Validate(model);
 
-        Assert.True(result.IsValid);
+        result.IsValid.Should().BeTrue();
     }
 }

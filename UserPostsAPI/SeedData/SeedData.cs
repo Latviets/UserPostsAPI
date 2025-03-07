@@ -21,12 +21,12 @@ public class SeedData
                     return;
                 }
 
-                var users = new List<UserModel>
+                var users = new List<User>
                 {
-                    new UserModel { Name = "Edvins", Email = "edvins@example.com", Password = "Password123", Address = "Riga, Liela Street 45-26" },
-                    new UserModel { Name = "Liga", Email = "liga@example.com", Password = "Password456", Address = "Ventspils, Liela Street 45-26" },
-                    new UserModel { Name = "Laura", Email = "laura@example.com", Password = "Password789", Address = "Tukums, Liela Street 45-26" },
-                    new UserModel { Name = "Roberts", Email = "roberts@example.com", Password = "Password321", Address = "Talsi, Liela Street 45-26" }
+                    new User { Name = "Edvins", Email = "edvins@example.com", Password = "Password123", Address = "Riga, Liela Street 45-26" },
+                    new User { Name = "Liga", Email = "liga@example.com", Password = "Password456", Address = "Ventspils, Liela Street 45-26" },
+                    new User { Name = "Laura", Email = "laura@example.com", Password = "Password789", Address = "Tukums, Liela Street 45-26" },
+                    new User { Name = "Roberts", Email = "roberts@example.com", Password = "Password321", Address = "Talsi, Liela Street 45-26" }
                 };
 
                 foreach (var user in users)
@@ -39,29 +39,29 @@ public class SeedData
 
                 context.SaveChanges();
 
-                var userPosts = new Dictionary<string, List<UserPostModel>>
+                var userPosts = new Dictionary<string, List<UserPost>>
                 {
-                    { "Edvins", new List<UserPostModel>
+                    { "Edvins", new List<UserPost>
                         {
-                            new UserPostModel { PostContent = "My first post" },
-                            new UserPostModel { PostContent = "My second post" }
+                            new UserPost { PostContent = "My first post" },
+                            new UserPost { PostContent = "My second post" }
                         }
                     },
-                    { "Liga", new List<UserPostModel>
+                    { "Liga", new List<UserPost>
                         {
-                            new UserPostModel { PostContent = "Liga's first post" }
+                            new UserPost { PostContent = "Liga's first post" }
                         }
                     },
-                    { "Laura", new List<UserPostModel>
+                    { "Laura", new List<UserPost>
                         {
-                            new UserPostModel { PostContent = "Laura's only post" }
+                            new UserPost { PostContent = "Laura's only post" }
                         }
                     },
-                    { "Roberts", new List<UserPostModel>
+                    { "Roberts", new List<UserPost>
                         {
-                            new UserPostModel { PostContent = "Robert's first post" },
-                            new UserPostModel { PostContent = "Robert's second post" },
-                            new UserPostModel { PostContent = "Robert's third post" }
+                            new UserPost { PostContent = "Robert's first post" },
+                            new UserPost { PostContent = "Robert's second post" },
+                            new UserPost { PostContent = "Robert's third post" }
                         }
                     }
                 };

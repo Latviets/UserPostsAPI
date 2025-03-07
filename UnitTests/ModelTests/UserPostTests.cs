@@ -1,13 +1,14 @@
-﻿using FluentValidation;
+﻿using FluentAssertions;
+using FluentValidation;
 using UserPostsAPI.Models;
 
-public class UserPostModelTests : TestBase
+public class UserPostTests : TestBase
 {
-    private readonly UserPostModel _basePost;
+    private readonly UserPost _basePost;
 
-    public UserPostModelTests()
+    public UserPostTests()
     {
-        _basePost = new UserPostModel
+        _basePost = new UserPost
         {
             Id = 1,
             UserId = 123,
@@ -20,12 +21,12 @@ public class UserPostModelTests : TestBase
     {
         var post = _basePost.Clone();
         post.UserId = 0;
-        var validator = GetService<IValidator<UserPostModel>>();
+        var validator = GetService<IValidator<UserPost>>();
 
         var result = validator.Validate(post);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "UserId" && e.ErrorMessage.Contains("greater than 0"));
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "UserId" && e.ErrorMessage.Contains("greater than 0"));
     }
 
     [Fact]
@@ -33,11 +34,11 @@ public class UserPostModelTests : TestBase
     {
         var post = _basePost.Clone();
         post.UserId = 2;
-        var validator = GetService<IValidator<UserPostModel>>();
+        var validator = GetService<IValidator<UserPost>>();
 
         var result = validator.Validate(post);
 
-        Assert.True(result.IsValid);
+        result.IsValid.Should().BeTrue();
     }
 
     [Fact]
@@ -45,12 +46,12 @@ public class UserPostModelTests : TestBase
     {
         var post = _basePost.Clone();
         post.PostContent = string.Empty;
-        var validator = GetService<IValidator<UserPostModel>>();
+        var validator = GetService<IValidator<UserPost>>();
 
         var result = validator.Validate(post);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "PostContent" && e.ErrorMessage.Contains("cannot be empty"));
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "PostContent" && e.ErrorMessage.Contains("cannot be empty"));
     }
 
     [Fact]
@@ -58,22 +59,22 @@ public class UserPostModelTests : TestBase
     {
         var post = _basePost.Clone();
         post.PostContent = new string('A', 501);
-        var validator = GetService<IValidator<UserPostModel>>();
+        var validator = GetService<IValidator<UserPost>>();
 
         var result = validator.Validate(post);
 
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "PostContent" && e.ErrorMessage.Contains("cannot exceed 500 characters"));
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "PostContent" && e.ErrorMessage.Contains("cannot exceed 500 characters"));
     }
 
     [Fact]
     public void Should_Pass_When_UserPostModel_Is_Valid()
     {
         var post = _basePost.Clone();
-        var validator = GetService<IValidator<UserPostModel>>();
+        var validator = GetService<IValidator<UserPost>>();
 
         var result = validator.Validate(post);
 
-        Assert.True(result.IsValid);
+        result.IsValid.Should().BeTrue();
     }
 }

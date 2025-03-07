@@ -15,8 +15,8 @@ public abstract class TestBase
         services.AddDbContext<AppDbContext>(options =>
             options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
-        services.AddTransient<IValidator<UserModel>, UserModelValidator>();
-        services.AddTransient<IValidator<UserPostModel>, UserPostModelValidator>();
+        services.AddTransient<IValidator<User>, UserValidator>();
+        services.AddTransient<IValidator<UserPost>, UserPostValidator>();
 
 
         ServiceProvider = services.BuildServiceProvider();

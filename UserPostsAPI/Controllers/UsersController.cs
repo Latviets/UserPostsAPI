@@ -16,7 +16,7 @@ public class UsersController : ControllerBase
 
     // GET: api/users/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserModel>> GetUserById(int id)
+    public async Task<ActionResult<User>> GetUserById(int id)
     {
         try
         {
@@ -43,7 +43,7 @@ public class UsersController : ControllerBase
 
     // GET: api/users/{id}/posts
     [HttpGet("{id}/posts")]
-    public async Task<ActionResult<IEnumerable<UserPostModel>>> GetUserPosts(int id)
+    public async Task<ActionResult<IEnumerable<UserPost>>> GetUserPosts(int id)
     {
         try
         {

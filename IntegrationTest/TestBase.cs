@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using UserPostsAPI.DBContext;
 using UserPostsAPI.Models;
 
@@ -15,8 +14,7 @@ public class TestBase : WebApplicationFactory<Program>
 
     protected void SeedDatabase(AppDbContext context)
     {
-        context.Users.Add(new UserModel { Id = 1, Name = "Test User" });
+        context.Users.Add(new User { Name = "Edvins", Email = "edvins@example.com", Password = "Password123", Address = "Riga, Liela Street 45-26" });
         context.SaveChanges();
     }
-
 }

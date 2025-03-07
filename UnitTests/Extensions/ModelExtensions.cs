@@ -2,9 +2,9 @@
 
 public static class ModelExtensions
 {
-    public static UserModel Clone(this UserModel original)
+    public static User Clone(this User original)
     {
-        return new UserModel
+        return new User
         {
             Id = original.Id,
             Name = original.Name,
@@ -14,9 +14,9 @@ public static class ModelExtensions
         };
     }
 
-    public static UserPostModel Clone(this UserPostModel original)
+    public static UserPost Clone(this UserPost original)
     {
-        return new UserPostModel
+        return new UserPost
         {
             Id = original.Id,
             UserId = original.UserId,

@@ -12,3 +12,6 @@
 /UserPostsAPITests/obj/
 /UnitTests/obj/
 /UnitTests/bin/
+/IntegrationTest/bin/
+/IntegrationTest/obj/
+.vs/

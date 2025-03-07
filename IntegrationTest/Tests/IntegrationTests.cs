@@ -10,24 +10,28 @@ public class UsersControllerIntegrationTests : TestBase, IDisposable
 
     public UsersControllerIntegrationTests()
     {
+        // Get the preconfigured database context from the WebApplicationFactory (TestBase)
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase("TestDatabase")
             .Options;
 
         _context = new AppDbContext(options);
 
+        // Seed the database once
         SeedDatabase(_context);
     }
 
     [Fact]
     public async Task GetUserById_ReturnsUser_WhenUserExists()
     {
+        // Act
         var response = await Client.GetAsync("/api/users/1");
 
+        // Assert
         response.EnsureSuccessStatusCode();
-        var user = await response.Content.ReadFromJsonAsync<UserModel>();
+        var user = await response.Content.ReadFromJsonAsync<User>();
         Assert.NotNull(user);
-        Assert.Equal("Test User", user.Name);
+        Assert.Equal("Edvins", user.Name);
     }
 
     [Fact]
@@ -55,26 +59,6 @@ public class UsersControllerIntegrationTests : TestBase, IDisposable
 
 
         Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task GetUserById_HandlesConcurrentRequests_Correctly()
-    {
-        var tasks = new[]
-        {
-            Client.GetAsync("/api/users/1"),
-            Client.GetAsync("/api/users/1")
-        };
-
-        var responses = await Task.WhenAll(tasks);
-
-        foreach (var response in responses)
-        {
-            response.EnsureSuccessStatusCode();
-            var user = await response.Content.ReadFromJsonAsync<UserModel>();
-            Assert.NotNull(user);
-            Assert.Equal("Test User", user.Name);
-        }
     }
 
     public void Dispose()

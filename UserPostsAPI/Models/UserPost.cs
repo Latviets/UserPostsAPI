@@ -1,6 +1,6 @@
 ﻿namespace UserPostsAPI.Models
 {
-    public class UserPostModel
+    public class UserPost
     {
         public int Id { get; set; }
         public int UserId { get; set; }

@@ -6,11 +6,13 @@ namespace UserPostsAPI.DBContext
     public class AppDbContext: DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
+        : base(options) 
         {
         }
 
-        public DbSet<UserModel> Users { get; set; }
-        public DbSet<UserPostModel> Posts { get; set; }
+        protected AppDbContext() { }
+
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserPost> Posts { get; set; }
     }
 }

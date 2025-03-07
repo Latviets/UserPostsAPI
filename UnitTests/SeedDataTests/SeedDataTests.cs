@@ -1,4 +1,6 @@
-﻿public class SeedDataTests
+﻿using FluentAssertions;
+
+public class SeedDataTests
 {
     [Fact]
     public void Initialize_PopulatesDatabase_WithExpectedData()
@@ -7,8 +9,8 @@
 
         SeedData.Initialize(serviceProvider.Object);
 
-        Assert.Equal(4, context.Users.Count());
-        Assert.Equal(7, context.Posts.Count());
+        context.Users.Count().Should().Be(4);
+        context.Posts.Count().Should().Be(7);
     }
 
     [Fact]
@@ -19,8 +21,8 @@
         SeedData.Initialize(serviceProvider.Object);
         SeedData.Initialize(serviceProvider.Object);
 
-        Assert.Equal(4, context.Users.Count()); // Count from seed data
-        Assert.Equal(7, context.Posts.Count());
+        context.Users.Count().Should().Be(4); // Count from seed data
+        context.Posts.Count().Should().Be(7);
     }
 
     [Fact]
@@ -34,8 +36,8 @@
             .Where(p => p.UserId == context.Users.Single(u => u.Name == "Edvins").Id)
             .ToList();
 
-        Assert.Equal(2, edvinsPosts.Count); // Post count for Edvins
-        Assert.Contains(edvinsPosts, p => p.PostContent == "My first post");
+        edvinsPosts.Count.Should().Be(2); // Post count for Edvins
+        edvinsPosts.Should().Contain(p => p.PostContent == "My first post");
     }
 
     [Fact]
@@ -50,8 +52,8 @@
         }
         await Task.WhenAll(tasks); // Wait for all tasks to complete
 
-        Assert.Equal(4, context.Users.Count());
-        Assert.Equal(7, context.Posts.Count());
-        Assert.True(context.Posts.All(p => p.UserId != 0));
+        context.Users.Count().Should().Be(4);
+        context.Posts.Count().Should().Be(7);
+        context.Posts.All(p => p.UserId != 0).Should().BeTrue();
     }
 }
