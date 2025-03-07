@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UserPostsAPI.DBContext;
-using UserPostsAPI.DTO;
 using UserPostsAPI.Models;
 
 [Route("api/[controller]")]
@@ -21,6 +20,11 @@ public class UsersController : ControllerBase
     {
         try
         {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -35,6 +39,7 @@ public class UsersController : ControllerBase
             return StatusCode(500, "Internal server error");
         }
     }
+
 
     // GET: api/users/{id}/posts
     [HttpGet("{id}/posts")]
@@ -55,54 +60,5 @@ public class UsersController : ControllerBase
         }
 
         return userPosts;
-    }
-
-
-    // Additional requests if necesary
-    // GET: api/users
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
-    {
-        return await _context.Users.ToListAsync();
-    }
-
-    // POST: api/users
-    [HttpPost]
-    public async Task<ActionResult<UserModel>> CreateUser(CreateUserDto userDto)
-    {
-        var user = new UserModel
-        {
-            Name = userDto.Name,
-            Email = userDto.Email,
-            Password = userDto.Password,
-            Address = userDto.Address
-        };
-
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
-    }
-
-    // POST: api/users/{id}/posts
-    [HttpPost("{id}/posts")]
-    public async Task<IActionResult> CreateUserPosts(int id, List<CreatePostDto> postDtos)
-    {
-        var user = await _context.Users.FindAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var posts = postDtos.Select(dto => new UserPostModel
-        {
-            UserId = id,
-            PostContent = dto.PostContent
-        }).ToList();
-
-        _context.Posts.AddRange(posts);
-        await _context.SaveChangesAsync();
-
-        return Ok(posts);
     }
 }

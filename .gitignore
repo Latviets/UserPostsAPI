@@ -6,3 +6,7 @@
 /UserPostsAPI/.vs/
 /UserPostsAPI/obj/
 /UserPostsAPI/bin/
+/IntegrationTests/bin/
+/IntegrationTests/obj/
+/UserPostsAPITests/bin/
+/UserPostsAPITests/obj/
