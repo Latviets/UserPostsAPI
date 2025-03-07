@@ -45,20 +45,27 @@ public class UsersController : ControllerBase
     [HttpGet("{id}/posts")]
     public async Task<ActionResult<IEnumerable<UserPostModel>>> GetUserPosts(int id)
     {
-        var user = await _context.Users.FindAsync(id);
-
-        if (user == null)
+        try
         {
-            return NotFound();
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userPosts = await _context.Posts.Where(p => p.UserId == id).ToListAsync();
+
+            if (!userPosts.Any())
+            {
+                return NotFound();
+            }
+
+            return userPosts;
         }
-
-        var userPosts = await _context.Posts.Where(p => p.UserId == id).ToListAsync();
-
-        if (!userPosts.Any())
+        catch (Exception ex)
         {
-            return NotFound();
+            return StatusCode(500, "Internal server error");
         }
-
-        return userPosts;
     }
 }
