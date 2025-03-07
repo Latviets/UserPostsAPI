@@ -1,53 +1,86 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Json;
+using UserPostsAPI.DBContext;
 using UserPostsAPI.Models;
 
-public class UsersControllerIntegrationTests : TestBase
+
+public class UsersControllerIntegrationTests : TestBase, IDisposable
 {
-    private readonly UsersController _controller;
+    private readonly AppDbContext _context;
 
     public UsersControllerIntegrationTests()
     {
-        _controller = new UsersController(Context);
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase("TestDatabase")
+            .Options;
 
-        // Seed data
-        Context.Users.Add(new UserModel { Id = 1, Name = "Test User" });
-        Context.SaveChanges();
+        _context = new AppDbContext(options);
+
+        SeedDatabase(_context);
     }
 
     [Fact]
     public async Task GetUserById_ReturnsUser_WhenUserExists()
     {
-        // Act
-        var result = await _controller.GetUserById(1);
+        var response = await Client.GetAsync("/api/users/1");
 
-        // Assert
-        Assert.IsType<ActionResult<UserModel>>(result);
-        Assert.NotNull(result.Value);
-        Assert.Equal("Test User", result.Value.Name);
+        response.EnsureSuccessStatusCode();
+        var user = await response.Content.ReadFromJsonAsync<UserModel>();
+        Assert.NotNull(user);
+        Assert.Equal("Test User", user.Name);
     }
 
     [Fact]
     public async Task GetUserById_ReturnsNotFound_WhenUserDoesNotExist()
     {
-        // Act
-        var result = await _controller.GetUserById(999);
+        var response = await Client.GetAsync("/api/users/999");
 
-        // Assert
-        Assert.IsType<NotFoundResult>(result.Result);
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]
-    public async Task GetUserPosts_ReturnsPosts_WhenPostsExist()
+    public async Task GetUserById_ReturnsBadRequest_WhenUserIdIsNegative()
     {
-        // Arrange
-        Context.Posts.Add(new UserPostModel { Id = 1, UserId = 1, PostContent = "Sample Post" });
-        Context.SaveChanges();
+        var response = await Client.GetAsync("/api/users/-1");
 
-        // Act
-        var result = await _controller.GetUserPosts(1);
+        Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Contains("Invalid user ID.", content);
+    }
 
-        // Assert
-        Assert.IsType<ActionResult<IEnumerable<UserPostModel>>>(result);
-        Assert.NotEmpty(result.Value);
+    [Fact]
+    public async Task GetUserById_ReturnsNotFound_WhenUserIdIsLarge()
+    {
+        var response = await Client.GetAsync($"/api/users/{int.MaxValue}");
+
+
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetUserById_HandlesConcurrentRequests_Correctly()
+    {
+        var tasks = new[]
+        {
+            Client.GetAsync("/api/users/1"),
+            Client.GetAsync("/api/users/1")
+        };
+
+        var responses = await Task.WhenAll(tasks);
+
+        foreach (var response in responses)
+        {
+            response.EnsureSuccessStatusCode();
+            var user = await response.Content.ReadFromJsonAsync<UserModel>();
+            Assert.NotNull(user);
+            Assert.Equal("Test User", user.Name);
+        }
+    }
+
+    public void Dispose()
+    {
+        // Clean up the database
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
     }
 }

@@ -155,9 +155,9 @@ function updateUrlWithQueryParam(key, value) {
     if (history.pushState) {
         const url = new URL(window.location);
         if (value) {
-            url.searchParams.set(key, value); // Set or update the query parameter
+            url.searchParams.set(key, value);
         } else {
-            url.searchParams.delete(key); // Remove the query parameter
+            url.searchParams.delete(key);
         }
         history.pushState({ path: url.href }, '', url.href); // Push the new URL
     } else {
@@ -173,7 +173,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     if (userIdFromUrl) {
         document.getElementById("userIdInput").value = userIdFromUrl; // Pre-fill the input field
-        await getUserById(userIdFromUrl); // Fetch user data
+        await getUserById(userIdFromUrl);
 
         if (viewFromUrl === "posts") {
             await getUserPosts(userIdFromUrl); // Fetch user posts if "view=posts" is present

@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using UserPostsAPI.Models;
-using UserPostsAPI.DBContext;
 
 public class UsersControllerTests
 {
