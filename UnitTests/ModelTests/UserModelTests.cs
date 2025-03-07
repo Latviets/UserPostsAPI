@@ -47,15 +47,12 @@ public class UserModelTests : TestBase
     [Fact]
     public void Should_Have_Error_When_Name_Contains_Special_Characters()
     {
-        // Arrange
         var model = _baseModel.Clone();
         model.Name = "John@Doe"; // Invalid name with special characters
         var validator = GetService<IValidator<UserModel>>();
 
-        // Act
         var result = validator.Validate(model);
 
-        // Assert
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => e.PropertyName == "Name" && e.ErrorMessage.Contains("must consist of letters only"));
     }

@@ -5,49 +5,12 @@ using UserPostsAPI.DBContext;
 
 public class UsersControllerTests
 {
-    private readonly AppDbContext _context;
-    private readonly UsersController _controller;
-
-    public UsersControllerTests()
-    {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase("TestDatabase")
-            .Options;
-
-        _context = new AppDbContext(options);
-
-        SeedDatabase();
-
-        _controller = new UsersController(_context);
-    }
-
-    private void SeedDatabase()
-    {
-        //Id = 1,
-        _context.Users.Add(new UserModel
-        {          
-            Name = "Test User",
-            Email = "user@example.com",
-            Password = "Password123",
-            Address = "123 Test Street"
-        });
-
-        //Id = 2,
-        _context.Users.Add(new UserModel
-        {   
-            Name = "Another User",
-            Email = "another@example.com",
-            Password = "Password456",
-            Address = "456 Another Avenue"
-        });
-
-        _context.SaveChanges();
-    }
-
     [Fact]
     public async Task GetUserById_ReturnsNotFound_WhenUserDoesNotExist()
     {
-        var result = await _controller.GetUserById(999);
+        var (_, controller) = TestUtils.CreateTestController("TestDatabase_UserNotFound");
+
+        var result = await controller.GetUserById(999);
 
         Assert.IsType<NotFoundResult>(result.Result);
     }
@@ -55,7 +18,18 @@ public class UsersControllerTests
     [Fact]
     public async Task GetUserById_ReturnsUser_WhenUserExists()
     {
-        var result = await _controller.GetUserById(1); // First user added in SeedDataBase
+        var (context, controller) = TestUtils.CreateTestController("TestDatabase_UserExists");
+        context.Users.Add(new UserModel
+        {
+            Id = 1,
+            Name = "Test User",
+            Email = "user@example.com",
+            Password = "Password123",
+            Address = "123 Test Street"
+        });
+        context.SaveChanges();
+
+        var result = await controller.GetUserById(1);
 
         Assert.IsType<ActionResult<UserModel>>(result);
         Assert.NotNull(result.Value);
@@ -66,7 +40,9 @@ public class UsersControllerTests
     [Fact]
     public async Task GetUserById_ReturnsBadRequest_WhenIdIsNegative()
     {
-        var result = await _controller.GetUserById(-1);
+        var (_, controller) = TestUtils.CreateTestController("TestDatabase_BadRequest");
+
+        var result = await controller.GetUserById(-1);
 
         Assert.IsType<BadRequestObjectResult>(result.Result);
         var badRequest = result.Result as BadRequestObjectResult;
@@ -76,13 +52,7 @@ public class UsersControllerTests
     [Fact]
     public async Task GetUserById_ReturnsInternalServerError_OnException()
     {
-        // Test-specific DbContext with in-memory database
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase("TestDatabase_InternalServerError")
-            .Options;
-
-        using var context = new AppDbContext(options);
-
+        var (context, controller) = TestUtils.CreateTestController("TestDatabase_InternalServerError");
         context.Users.Add(new UserModel
         {
             Id = 1,
@@ -96,8 +66,6 @@ public class UsersControllerTests
         // Simulate failure by disposing of the context before the controller can use it
         context.Dispose();
 
-        var controller = new UsersController(context);
-
         var result = await controller.GetUserById(1);
 
         var statusResult = Assert.IsType<ObjectResult>(result.Result);
@@ -108,29 +76,20 @@ public class UsersControllerTests
     [Fact]
     public async Task GetUserPosts_ReturnsNotFound_WhenUserDoesNotExist()
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase("TestDatabase_UserNotFound")
-            .Options;
+        var (_, controller) = TestUtils.CreateTestController("TestDatabase_UserNotFound");
 
-        using var context = new AppDbContext(options);
-        var controller = new UsersController(context);
-
-        var result = await controller.GetUserPosts(999); // Nonexistent user ID
+        var result = await controller.GetUserPosts(999);
 
         Assert.IsType<NotFoundResult>(result.Result);
     }
 
-
     [Fact]
     public async Task GetUserPosts_ReturnsNotFound_WhenUserHasNoPosts()
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase("TestDatabase_UserNoPosts")
-            .Options;
-
-        using var context = new AppDbContext(options);
+        var (context, controller) = TestUtils.CreateTestController("TestDatabase_UserNoPosts");
         context.Users.Add(new UserModel
         {
+            Id = 1,
             Name = "Test Person",
             Email = "user@example.com",
             Password = "Password123",
@@ -138,9 +97,7 @@ public class UsersControllerTests
         });
         context.SaveChanges();
 
-        var controller = new UsersController(context);
-
-        var result = await controller.GetUserPosts(1); // User exists but has no posts
+        var result = await controller.GetUserPosts(1);
 
         Assert.IsType<NotFoundResult>(result.Result);
     }
@@ -148,27 +105,22 @@ public class UsersControllerTests
     [Fact]
     public async Task GetUserPosts_ReturnsPosts_WhenUserExistsAndHasPosts()
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase("TestDatabase_UserWithPosts")
-            .Options;
-
-        using var context = new AppDbContext(options);
-        context.Users.Add(new UserModel
+        var (context, controller) = TestUtils.CreateTestController("TestDatabase_UserWithPosts");
+        var user = new UserModel
         {
+            Id = 1,
             Name = "Test User",
             Email = "user@example.com",
             Password = "Password123",
             Address = "123 Test Street"
-        });
-
+        };
+        context.Users.Add(user);
         context.Posts.Add(new UserPostModel
         {
-            UserId = 1,
+            UserId = user.Id,
             PostContent = "First Post"
         });
         context.SaveChanges();
-
-        var controller = new UsersController(context);
 
         var result = await controller.GetUserPosts(1);
 
@@ -181,21 +133,16 @@ public class UsersControllerTests
     [Fact]
     public async Task GetUserPosts_ReturnsInternalServerError_OnException()
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase("TestDatabase_InternalServerErrorPosts")
-            .Options;
-
-        using var context = new AppDbContext(options);
+        var (context, controller) = TestUtils.CreateTestController("TestDatabase_InternalServerErrorPosts");
         context.Users.Add(new UserModel
         {
+            Id = 1,
             Name = "Test User",
             Email = "user@example.com",
             Password = "Password123",
             Address = "123 Test Street"
         });
         context.SaveChanges();
-
-        var controller = new UsersController(context);
 
         // Simulate failure by disposing of the context
         context.Dispose();
@@ -210,14 +157,10 @@ public class UsersControllerTests
     [Fact]
     public async Task GetUserById_ReturnsNotFound_WhenDatabaseIsEmpty()
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase("EmptyTestDatabase")
-            .Options;
-
-        using var context = new AppDbContext(options);
-        var controller = new UsersController(context);
+        var (_, controller) = TestUtils.CreateTestController("EmptyTestDatabase");
 
         var result = await controller.GetUserById(1);
+
         Assert.IsType<NotFoundResult>(result.Result);
     }
 }
