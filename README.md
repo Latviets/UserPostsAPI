@@ -2,6 +2,8 @@
 
 A lightweight **ASP.NET Web API** project that provides endpoints to manage user data and their associated posts. This repository includes an **integrated JavaScript front-end**, offering a seamless interface for users to interact with the API. It is designed for simplicity and serves as a foundational project for learning and implementing RESTful APIs with C# and JavaScript.
 
+![ASP NET WEB API with JS integration](https://github.com/user-attachments/assets/c64d0701-fc6c-4fd5-b296-3ad3cc92ce28)
+
 ---
 
 ## Features
