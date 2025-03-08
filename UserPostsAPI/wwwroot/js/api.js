@@ -17,7 +17,7 @@ export async function getUserById(userId) {
     if (!response.ok) {
         let errorMessage = `Error: ${response.status}`;
         if (response.status === 404) {
-            errorMessage = "User not found. Please check the ID and try again."; // Custom error message for 404
+            errorMessage = "User not found. Please check the ID and try again.";
         } else {
             try {
                 const errorResponse = await response.text();
@@ -35,7 +35,7 @@ export async function getUserById(userId) {
 }
 
 
-
+// Fetch user posts
 export async function getUserPosts(userId) {
     // Validation to block negative IDs
     if (userId < 0) {
@@ -43,7 +43,6 @@ export async function getUserPosts(userId) {
         throw new Error("Invalid User ID. User ID cannot be a negative number.");
     }
 
-    // Fetch user posts
     const response = await fetch(`${apiUrl}/${userId}/posts`, {
         method: 'GET',
         headers: {

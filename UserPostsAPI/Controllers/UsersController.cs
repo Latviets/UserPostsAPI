@@ -47,6 +47,11 @@ public class UsersController : ControllerBase
     {
         try
         {
+            if (id <= 0) // Validation for negative or zero IDs
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
             var user = await _context.Users.FindAsync(id);
 
             if (user == null)

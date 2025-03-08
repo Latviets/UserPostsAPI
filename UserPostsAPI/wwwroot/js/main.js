@@ -12,7 +12,6 @@ const fetchUserPostsButton = document.getElementById("fetchUserPostsButton");
 const resetButton = document.getElementById("resetButton");
 let currentUserId = null;
 
-// Event listeners
 fetchUserButton.addEventListener("click", async () => {
     const userId = userIdInput.value;
 
@@ -67,7 +66,6 @@ resetButton.addEventListener("click", () => {
     updateUrlWithQueryParam("view", null);
 });
 
-
 // Automatically fetch data based on URL parameters
 window.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
@@ -102,6 +100,7 @@ function resetUserPosts() {
         </tr>
     `;
 }
+
 function resetForNewRequest() {
     resetUserDetails();
     resetUserPosts();

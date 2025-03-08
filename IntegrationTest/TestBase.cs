@@ -14,7 +14,39 @@ public class TestBase : WebApplicationFactory<Program>
 
     protected void SeedDatabase(AppDbContext context)
     {
-        context.Users.Add(new User { Name = "Edvins", Email = "edvins@example.com", Password = "Password123", Address = "Riga, Liela Street 45-26" });
+        var users = new List<User>
+    {
+        new User
+        {
+            //Id = 1,
+            Name = "Edvins",
+            Email = "edvins@example.com",
+            Password = "Password",
+            Address = "Riga, Liela Street 45-26"
+        },
+        new User
+        {
+            //Id = 2,
+            Name = "Laura",
+            Email = "laura@example.com",
+            Password = "Password000",
+            Address = "Riga, Brivibas Street 12-34"
+        }
+    };
+
+        context.Users.AddRange(users);
+
+        var posts = new List<UserPost>
+    {
+        new UserPost
+        {
+            UserId = 1,
+            PostContent = "This is a sample post content."
+        }
+    };
+
+        context.Posts.AddRange(posts);
+
         context.SaveChanges();
     }
 }
