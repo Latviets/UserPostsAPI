@@ -18,7 +18,6 @@ public class TestBase : WebApplicationFactory<Program>
     {
         new User
         {
-            //Id = 1,
             Name = "Edvins",
             Email = "edvins@example.com",
             Password = "Password",
@@ -26,7 +25,6 @@ public class TestBase : WebApplicationFactory<Program>
         },
         new User
         {
-            //Id = 2,
             Name = "Laura",
             Email = "laura@example.com",
             Password = "Password000",

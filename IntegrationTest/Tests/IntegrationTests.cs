@@ -22,6 +22,27 @@ public class UsersControllerIntegrationTests : TestBase, IDisposable
     }
 
     [Fact]
+    public async Task VerifyDatabaseIsSeededCorrectly()
+    {
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase("TestDatabase") // Ensure this matches the database name used
+            .Options;
+
+        using var context = new AppDbContext(options);
+
+        var users = context.Users.ToList();
+        var posts = context.Posts.ToList();
+
+        users.Should().HaveCount(2);
+        users.Should().ContainSingle(u => u.Name == "Edvins" && u.Email == "edvins@example.com");
+        users.Should().ContainSingle(u => u.Name == "Laura" && u.Email == "laura@example.com");
+
+        posts.Should().ContainSingle();
+        posts[0].UserId.Should().Be(1);
+        posts[0].PostContent.Should().Be("This is a sample post content.");
+    }
+
+    [Fact]
     public async Task GetUserById_ReturnsUser_WhenUserExists()
     {
         var response = await Client.GetAsync("/api/users/1");
