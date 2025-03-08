@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using FluentValidation;
-using UserPostsAPI.Models;
+using UserPostsAPI.Data.Models;
 
 public class UserTests : TestBase
 {
@@ -10,7 +10,6 @@ public class UserTests : TestBase
     {
         _baseModel = new User
         {
-            Id = 1,
             Name = "Test User",
             Email = "test@example.com",
             Password = "123456",
@@ -25,11 +24,25 @@ public class UserTests : TestBase
         model.Name = string.Empty;
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Name");
     }
+
+    [Fact]
+    public void Should_Have_Error_When_Name_Is_Null()
+    {
+        var model = _baseModel.Clone();
+        model.Name = null;
+        var validator = GetService<IValidator<User>>();
+
+        var result = validator!.Validate(model);
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage.Contains("Name is required")); // Assert specific error
+    }
+
 
     [Fact]
     public void Should_Have_Error_When_Name_Contains_Numbers()
@@ -38,7 +51,7 @@ public class UserTests : TestBase
         model.Name = "John123";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Name" 
@@ -52,7 +65,7 @@ public class UserTests : TestBase
         model.Name = "John@Doe";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Name" 
@@ -66,7 +79,7 @@ public class UserTests : TestBase
         model.Name = "Jo";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Name" 
@@ -80,7 +93,7 @@ public class UserTests : TestBase
         model.Name = "Edvins Valid";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeTrue();
     }
@@ -92,7 +105,7 @@ public class UserTests : TestBase
         model.Email = "invalid-email";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Email");
@@ -105,7 +118,7 @@ public class UserTests : TestBase
         model.Email = string.Empty;
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Email");
@@ -118,7 +131,7 @@ public class UserTests : TestBase
         model.Email = "valid@gmail.com";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeTrue();
     }
@@ -130,7 +143,7 @@ public class UserTests : TestBase
         model.Password = string.Empty;
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Password" 
@@ -144,7 +157,7 @@ public class UserTests : TestBase
         model.Password = "123";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Password" 
@@ -158,7 +171,7 @@ public class UserTests : TestBase
         model.Password = "secure123";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeTrue();
     }
@@ -170,7 +183,7 @@ public class UserTests : TestBase
         model.Address = string.Empty;
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Address"
@@ -184,7 +197,7 @@ public class UserTests : TestBase
         model.Address = "123 Elm Street";
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeTrue();
     }
@@ -195,7 +208,7 @@ public class UserTests : TestBase
         var model = _baseModel.Clone();
         var validator = GetService<IValidator<User>>();
 
-        var result = validator.Validate(model);
+        var result = validator!.Validate(model);
 
         result.IsValid.Should().BeTrue();
     }

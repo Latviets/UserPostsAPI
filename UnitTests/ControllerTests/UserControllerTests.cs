@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using UserPostsAPI.Models;
+using UserPostsAPI.Data.Models;
 
 public class UsersControllerTests
 {

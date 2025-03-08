@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace UserPostsAPI.Models
+namespace UserPostsAPI.Data.Models
 {
     public class UserValidator : AbstractValidator<User>
     {
@@ -9,6 +9,8 @@ namespace UserPostsAPI.Models
             RuleFor(user => user.Name)
                 .NotEmpty()
                 .WithMessage("Name cannot be empty.")
+                .NotNull()
+                .WithMessage("Name is required.")
                 .Matches("^[a-zA-Z ]+$")
                 .WithMessage("Name must consist of letters only.")
                 .MinimumLength(3)

@@ -14,4 +14,7 @@
 /UnitTests/bin/
 /IntegrationTest/bin/
 /IntegrationTest/obj/
-/.vs/
+.vs/VSWorkspaceState.json
+/UserPostsAPI.Data/bin/
+/UserPostsAPI.Data/obj/Debug
+/UserPostsAPI.Data/obj/

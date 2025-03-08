@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
-using UserPostsAPI.DBContext;
-using UserPostsAPI.Models;
+using UserPostsAPI.Data.DBContext;
 using Microsoft.EntityFrameworkCore;
+using UserPostsAPI.Data.Models;
 
 public abstract class TestBase
 {
@@ -22,7 +22,7 @@ public abstract class TestBase
         ServiceProvider = services.BuildServiceProvider();
     }
 
-    protected T GetService<T>()
+    protected T? GetService<T>()
     {
         return ServiceProvider.GetService<T>();
     }

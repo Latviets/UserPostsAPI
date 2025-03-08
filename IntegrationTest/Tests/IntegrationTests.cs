@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Json;
-using UserPostsAPI.DBContext;
-using UserPostsAPI.Models;
+using UserPostsAPI.Data.DBContext;
+using UserPostsAPI.Data.Models;
 
 
 public class UsersControllerIntegrationTests : TestBase, IDisposable
@@ -61,7 +61,7 @@ public class UsersControllerIntegrationTests : TestBase, IDisposable
         Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    public void Dispose()
+    public new void Dispose()
     {
         // Clean up the database
         _context.Database.EnsureDeleted();

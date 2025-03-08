@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
-using UserPostsAPI.DBContext;
+using UserPostsAPI.Data.DBContext;
 
 public static class TestUtils
 {

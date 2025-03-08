@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using UserPostsAPI.DBContext;
-using UserPostsAPI.Models;
+using UserPostsAPI.Data.DBContext;
+using UserPostsAPI.Data.Models;
 
 public class TestBase : WebApplicationFactory<Program>
 {

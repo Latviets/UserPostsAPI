@@ -1,4 +1,4 @@
-﻿using UserPostsAPI.Models;
+﻿using UserPostsAPI.Data.Models;
 
 public static class ModelExtensions
 {

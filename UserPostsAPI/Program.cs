@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using UserPostsAPI.DBContext;
+using UserPostsAPI.Data.DBContext;
 
 namespace UserPostsAPI
 {

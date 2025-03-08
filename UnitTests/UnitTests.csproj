@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\UserPostsAPI.Data\UserPostsAPI.Data.csproj" />
     <ProjectReference Include="..\UserPostsAPI\UserPostsAPI.csproj" />
   </ItemGroup>
 

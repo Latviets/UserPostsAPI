@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using FluentValidation;
-using UserPostsAPI.Models;
+using UserPostsAPI.Data.Models;
 
 public class UserPostTests : TestBase
 {
@@ -23,7 +23,7 @@ public class UserPostTests : TestBase
         post.UserId = 0;
         var validator = GetService<IValidator<UserPost>>();
 
-        var result = validator.Validate(post);
+        var result = validator!.Validate(post);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "UserId" && e.ErrorMessage.Contains("greater than 0"));
@@ -36,7 +36,7 @@ public class UserPostTests : TestBase
         post.UserId = 2;
         var validator = GetService<IValidator<UserPost>>();
 
-        var result = validator.Validate(post);
+        var result = validator!.Validate(post);
 
         result.IsValid.Should().BeTrue();
     }
@@ -48,7 +48,7 @@ public class UserPostTests : TestBase
         post.PostContent = string.Empty;
         var validator = GetService<IValidator<UserPost>>();
 
-        var result = validator.Validate(post);
+        var result = validator!.Validate(post);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "PostContent" && e.ErrorMessage.Contains("cannot be empty"));
@@ -61,7 +61,7 @@ public class UserPostTests : TestBase
         post.PostContent = new string('A', 501);
         var validator = GetService<IValidator<UserPost>>();
 
-        var result = validator.Validate(post);
+        var result = validator!.Validate(post);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "PostContent" && e.ErrorMessage.Contains("cannot exceed 500 characters"));
@@ -73,7 +73,7 @@ public class UserPostTests : TestBase
         var post = _basePost.Clone();
         var validator = GetService<IValidator<UserPost>>();
 
-        var result = validator.Validate(post);
+        var result = validator!.Validate(post);
 
         result.IsValid.Should().BeTrue();
     }

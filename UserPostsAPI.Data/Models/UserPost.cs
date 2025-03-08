@@ -1,4 +1,4 @@
-﻿namespace UserPostsAPI.Models
+﻿namespace UserPostsAPI.Data.Models
 {
     public class UserPost
     {
