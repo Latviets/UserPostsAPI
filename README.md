@@ -37,14 +37,3 @@ A lightweight **ASP.NET Web API** project that provides endpoints to manage user
 - **Language**: C#
 ---
 
-## Getting Started
-
-### Prerequisites
-- .NET 7 or newer installed.
-- A code editor such as Visual Studio or Visual Studio Code.
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/UserPostsAPI.git
-   cd UserPostsAPI
