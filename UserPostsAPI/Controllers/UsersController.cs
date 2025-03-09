@@ -40,14 +40,13 @@ public class UsersController : ControllerBase
         }
     }
 
-
     // GET: api/users/{id}/posts
     [HttpGet("{id}/posts")]
     public async Task<ActionResult<IEnumerable<UserPost>>> GetUserPosts(int id)
     {
         try
         {
-            if (id <= 0) // Validation for negative or zero IDs
+            if (id <= 0)
             {
                 return BadRequest("Invalid user ID.");
             }

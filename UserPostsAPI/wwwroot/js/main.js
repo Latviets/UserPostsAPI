@@ -20,8 +20,10 @@ fetchUserButton.addEventListener("click", async () => {
         return;
     }
 
+    clearErrorField();
+
     if (userId !== currentUserId) {
-        resetUserPosts(); // Clear posts only if the user ID is different
+        resetUserPosts();
     }
 
     try {
@@ -31,6 +33,8 @@ fetchUserButton.addEventListener("click", async () => {
         updateUrlWithQueryParam("userId", userId);
     } catch (error) {
         console.error("Error caught in main.js:", error.message);
+        resetUserDetails(); // Clear user data on error
+        resetUserPosts();
         showError(error.message, errorContainer);
     }
 });
@@ -43,8 +47,10 @@ fetchUserPostsButton.addEventListener("click", async () => {
         return;
     }
 
+    clearErrorField();
+
     if (userId !== currentUserId) {
-        resetUserDetails(); // Clear user details only if the user ID is different
+        resetUserDetails();
     }
 
     try {
@@ -55,6 +61,8 @@ fetchUserPostsButton.addEventListener("click", async () => {
         updateUrlWithQueryParam("view", "posts");
     } catch (error) {
         console.error("Error caught in main.js:", error.message);
+        resetUserDetails(); // Clear user data on error
+        resetUserPosts();
         showError(error.message, errorContainer);
     }
 });
@@ -101,7 +109,7 @@ function resetUserPosts() {
     `;
 }
 
-function resetForNewRequest() {
-    resetUserDetails();
-    resetUserPosts();
+function clearErrorField() {
+    errorContainer.style.display = "none";
+    errorContainer.innerHTML = "";
 }

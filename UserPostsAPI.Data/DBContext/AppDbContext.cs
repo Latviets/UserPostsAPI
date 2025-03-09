@@ -17,10 +17,8 @@ namespace UserPostsAPI.Data.DBContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Call the base implementation
             base.OnModelCreating(modelBuilder);
 
-            // Define entity configurations
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<UserPost>().ToTable("Posts");
         }

@@ -61,7 +61,7 @@ public class UsersControllerTests
         });
         context.SaveChanges();
 
-        // Simulate failure by disposing of the context before the controller can use it
+        // Simulate failure by disposing of the context
         context.Dispose();
 
         var result = await controller.GetUserById(1);

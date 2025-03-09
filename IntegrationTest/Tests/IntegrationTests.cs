@@ -139,12 +139,12 @@ public class UsersControllerIntegrationTests : TestBase, IDisposable
         var users = new List<User>
     {
         new User { Id = 1, Name = "Edvins" },
-        new User { Id = 2, Name = "Laura" } // UserId 2 with no posts
+        new User { Id = 2, Name = "Laura" }
     };
         var mockUsersDbSet = DbContextMockHelper.CreateMockDbSet(users);
         mockContext.Setup(c => c.Users).Returns(mockUsersDbSet.Object);
 
-        var posts = new List<UserPost>(); // No posts for UserId 2
+        var posts = new List<UserPost>(); // Empty list with no posts
         var mockPostsDbSet = DbContextMockHelper.CreateMockDbSet(posts);
         mockContext.Setup(c => c.Posts).Returns(mockPostsDbSet.Object);
 
@@ -174,9 +174,9 @@ public class UsersControllerIntegrationTests : TestBase, IDisposable
         statusCodeResult.Value.Should().Be("Internal server error");
     }
 
+    // Clean up the database
     public new void Dispose()
     {
-        // Clean up the database
         _context.Database.EnsureDeleted();
         _context.Dispose();
     }

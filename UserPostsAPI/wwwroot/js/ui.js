@@ -34,5 +34,5 @@ export function resetUI(userDetailsContainer, userPostsContainer, errorContainer
         </tr>
     `;
     errorContainer.style.display = "none";
-    errorContainer.textContent = "";
+    errorContainer.innerHTML = "";
 }

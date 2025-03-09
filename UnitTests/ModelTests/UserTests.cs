@@ -40,7 +40,8 @@ public class UserTests : TestBase
         var result = validator!.Validate(model);
 
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.PropertyName == "Name" && e.ErrorMessage.Contains("Name is required")); // Assert specific error
+        result.Errors.Should().Contain(e => e.PropertyName == "Name"
+            && e.ErrorMessage.Contains("Name is required"));
     }
 
 

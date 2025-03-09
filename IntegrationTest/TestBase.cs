@@ -8,7 +8,7 @@ public class TestBase : WebApplicationFactory<Program>
 
     public TestBase()
     {
-        // Create an HTTP client to simulate API requests
+        // HTTP client to simulate API requests
         Client = CreateClient();
     }
 

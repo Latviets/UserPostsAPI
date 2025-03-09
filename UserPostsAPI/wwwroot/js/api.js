@@ -7,17 +7,57 @@ export async function getUserById(userId) {
         throw new Error("Invalid User ID. User ID cannot be a negative number.");
     }
 
-    const response = await fetch(`${apiUrl}/${userId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
+    try {
+        const response = await fetch(`${apiUrl}/${userId}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
 
+        await handleResponseErrors(response, "User not found. Please check the ID and try again.");
+
+        const data = await response.json();
+        if (!data || Object.keys(data).length === 0) {
+            throw new Error("No user data available.");
+        }
+
+        return data;
+    } catch (error) {
+        console.error("An error occurred while fetching user data:", error.message);
+        throw error;
+    }
+}
+
+// Fetch user posts by ID
+export async function getUserPosts(userId) {
+    if (userId < 0) {
+        throw new Error("Invalid User ID. User ID cannot be a negative number.");
+    }
+
+    try {
+        const response = await fetch(`${apiUrl}/${userId}/posts`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        await handleResponseErrors(response, "Posts not found.");
+
+        const posts = await response.json();
+        if (!posts || posts.length === 0) {
+            throw new Error("No posts found for the given user ID.");
+        }
+
+        return posts;
+    } catch (error) {
+        console.error("An error occurred while fetching user posts:", error.message);
+        throw error;
+    }
+}
+
+async function handleResponseErrors(response, notFoundMessage) {
     if (!response.ok) {
         let errorMessage = `Error: ${response.status}`;
         if (response.status === 404) {
-            errorMessage = "User not found. Please check the ID and try again.";
+            errorMessage = notFoundMessage;
         } else {
             try {
                 const errorResponse = await response.text();
@@ -30,30 +70,4 @@ export async function getUserById(userId) {
         }
         throw new Error(errorMessage);
     }
-
-    return response.json(); // Return user data if successful
-}
-
-
-// Fetch user posts
-export async function getUserPosts(userId) {
-    // Validation to block negative IDs
-    if (userId < 0) {
-        console.log("Validation triggered: Negative User ID is not allowed.");
-        throw new Error("Invalid User ID. User ID cannot be a negative number.");
-    }
-
-    const response = await fetch(`${apiUrl}/${userId}/posts`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-
-    if (!response.ok) {
-        const errorText = response.status === 404 ? "Posts not found." : `Error: ${response.status}`;
-        throw new Error(errorText);
-    }
-
-    return response.json();
 }
