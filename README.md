@@ -1,6 +1,7 @@
 # UserPostsAPI
 
-A lightweight **ASP.NET Web API** project that provides endpoints to manage user data and their associated posts. This repository includes an **integrated JavaScript front-end**, offering a seamless interface for users to interact with the API. It is designed for simplicity and serves as a foundational project for learning and implementing RESTful APIs with C# and JavaScript.
+A lightweight **ASP.NET Web API** project that provides endpoints to manage user data and their associated posts.
+- This repository includes an **integrated JavaScript front-end**, offering a seamless interface for users to interact with the API. It is designed for simplicity and serves as a foundational project for learning and implementing RESTful APIs with C# and JavaScript.
 
 ![ASP NET WEB API with JS integration](https://github.com/user-attachments/assets/0c059a25-a03c-4f4e-a0ef-2bb21518e366)
 
@@ -81,3 +82,21 @@ A lightweight **ASP.NET Web API** project that provides endpoints to manage user
 - Dynamic rendering of user data and posts.
 - Error messages displayed for invalid user IDs or failed API requests.
 - Smooth handling of data resets and updates.
+
+## SQL Server Setup
+- To run the tests provided in this project, a local SQL Server instance must be set up and running. The database is required to store and retrieve user data and posts during the tests.
+- Required Configuration:
+   - The database should be named UsersPosts.
+   - Use the following connection string in the appsettings.json file:
+   - ```json
+     {
+      "ConnectionStrings": {
+     "DefaultConnection": "Server=localhost;Database=UsersPosts;Trusted_Connection=True;TrustServerCertificate=True;" }
+     }
+     
+### Steps:
+   - Install SQL Server (e.g., SQL Server Express or any preferred version).
+   - Create a new database named UsersPosts.
+   - Ensure the database is accessible locally, and the API has the correct connection string to connect to it.
+
+This configuration ensures that the API and the tests can interact with the database as expected. Let me know if you need further assistance! 🚀
